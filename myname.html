@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top 10 Places in India — Beginner Example</title>
+  <style>
+    /* Simple, beginner-friendly styling */
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.4;color:#222}
+    body{margin:0;padding:0;background:#f7f7fb}
+    header{background:#0366d6;color:white;padding:1rem}
+    .container{max-width:980px;margin:1rem auto;padding:0 1rem}
+    h1{margin:0;font-size:1.4rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1rem}
+    .card{background:white;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.08);display:flex;flex-direction:column}
+    .card img{width:100%;height:160px;object-fit:cover;display:block}
+    .card-body{padding:0.75rem;flex:1;display:flex;flex-direction:column}
+    .place-name{font-weight:600;margin:0 0 0.25rem 0}
+    .place-loc{font-size:0.9rem;color:#555;margin-bottom:0.5rem}
+    .place-desc{font-size:0.95rem;color:#333;margin-top:auto}
+    .controls{display:flex;gap:0.5rem;align-items:center;margin-top:0.5rem}
+    input[type="search"]{padding:0.5rem;border:1px solid #cfd8e3;border-radius:6px;flex:1}
+    footer{font-size:0.85rem;color:#666;text-align:center;padding:1rem 0}
+    @media (max-width:420px){.card img{height:120px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Top 10 Places to Visit in India (Beginner Example)</h1>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <section>
+      <p>This simple page stores the top 10 places in a JavaScript array and renders them as cards. Use the search box to filter results.</p>
+
+      <div class="controls">
+        <input id="search" type="search" placeholder="Search places (name or location)" aria-label="Search places" />
+      </div>
+
+      <div id="places" class="grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">A beginner-friendly sample page • Save this file and open in your browser</div>
+  </footer>
+
+  <script>
+    // Top 10 places stored as an array of objects.
+    // Each object has: name, location, description, image (placeholder)
+    const topPlaces = [
+      {
+        name: "Taj Mahal",
+        location: "Agra, Uttar Pradesh",
+        desc: "Famous white marble mausoleum built by Mughal emperor Shah Jahan.",
+        image: "https://via.placeholder.com/600x400?text=Taj+Mahal"
+      },
+      {
+        name: "Jaipur (Pink City)",
+        location: "Rajasthan",
+        desc: "Capital city known for palaces, forts and vibrant markets.",
+        image: "https://via.placeholder.com/600x400?text=Jaipur"
+      },
+      {
+        name: "Varanasi",
+        location: "Uttar Pradesh",
+        desc: "Ancient spiritual city on the banks of the Ganges, known for ghats and rituals.",
+        image: "https://via.placeholder.com/600x400?text=Varanasi"
+      },
+      {
+        name: "Goa",
+        location: "Goa",
+        desc: "Coastal state popular for beaches, seafood and Portuguese heritage.",
+        image: "https://via.placeholder.com/600x400?text=Goa"
+      },
+      {
+        name: "Kerala Backwaters",
+        location: "Kerala",
+        desc: "Scenic network of lagoons and canals; houseboat stays are popular.",
+        image: "https://via.placeholder.com/600x400?text=Kerala+Backwaters"
+      },
+      {
+        name: "Leh-Ladakh",
+        location: "Ladakh",
+        desc: "High-altitude desert with dramatic landscapes, monasteries and trekking.",
+        image: "https://via.placeholder.com/600x400?text=Leh+Ladakh"
+      },
+      {
+        name: "Rann of Kutch",
+        location: "Gujarat",
+        desc: "Vast white salt marsh with seasonal cultural festivals.",
+        image: "https://via.placeholder.com/600x400?text=Rann+of+Kutch"
+      },
+      {
+        name: "Mysore",
+        location: "Karnataka",
+        desc: "Royal city known for its palace, silk and Dussehra celebrations.",
+        image: "https://via.placeholder.com/600x400?text=Mysore"
+      },
+      {
+        name: "Darjeeling",
+        location: "West Bengal",
+        desc: "Hill station famous for tea gardens and views of the Himalaya.",
+        image: "https://via.placeholder.com/600x400?text=Darjeeling"
+      },
+      {
+        name: "Hampi",
+        location: "Karnataka",
+        desc: "UNESCO site with ancient ruins and dramatic boulder-strewn landscape.",
+        image: "https://via.placeholder.com/600x400?text=Hampi"
+      }
+    ];
+
+    // Renders the array into the DOM as cards.
+    const container = document.getElementById('places');
+
+    function renderPlaces(list) {
+      container.innerHTML = ''; // clear
+      if (list.length === 0) {
+        container.innerHTML = '<p>No places found.</p>';
+        return;
+      }
+      for (const p of list) {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.name} photo">
+          <div class="card-body">
+            <h3 class="place-name">${p.name}</h3>
+            <div class="place-loc">${p.location}</div>
+            <div class="place-desc">${p.desc}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    // Simple search filter (by name or location)
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) {
+        renderPlaces(topPlaces);
+        return;
+      }
+      const filtered = topPlaces.filter(p =>
+        p.name.toLowerCase().includes(q) || p.location.toLowerCase().includes(q)
+      );
+      renderPlaces(filtered);
+    });
+
+    // Initial render
+    renderPlaces(topPlaces);
+  </script>
+</body>
+</html>
